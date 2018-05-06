@@ -1,6 +1,6 @@
 # inav_sonar_i2c_arduino
 
-Connect from arduino to HC-R04
+Connect from arduino to HCSR04
 
 Pin A3 connect to Triger
 
