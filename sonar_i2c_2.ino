@@ -1,8 +1,12 @@
 /*
 Code modify by trunglp
-From Pawe Spychalski
+From Pawe Spychalski  https://github.com/iNavFlight/INAV-Rangefinder-I2C-interface
+and https://code.google.com/archive/p/i2c-gps-nav/
+
 Pin A3 connect to Triger
 Pin A2 connect to Echo
+Pin A4 connect to SDA (pin Flight Control) pullup resistors 1K omh
+Pin A5 connect to SCL (pin Flight Control) pullup resistors 1K omh
 */
 
 #include "WireMW.h"
@@ -97,28 +101,20 @@ void Sonar_init()
 }
 
 
-
 ISR(PCINT1_vect) {
-
-    //uint8_t pin = PINC;
 
     if (PINC & 1<<PCINT10) {     //indicates if the bit 0 of the arduino port [B0-B7] is at a high state
       Sonar_starTime = micros();
     }
     else {
       Sonar_echoTime = micros() - Sonar_starTime; // Echo time in microseconds
-     ///Serial.println("helo:" + Sonar_echoTime);
 
       reg_position = Sonar_echoTime / 58;
       if ((Sonar_echoTime <= 700*58) && (reg_position < 400) ){     // valid distance
         reg_position = Sonar_echoTime / 58;
-        Serial.println(reg_position);
+        //Serial.println(reg_position);
 
-
-        
-          i2c_regs[0] = STATUS_OK;
-
-    
+          i2c_regs[0] = STATUS_OK;    
    
           if (reg_position <10) {
             digitalWrite(LED_PIN, HIGH);
@@ -136,9 +132,8 @@ ISR(PCINT1_vect) {
       {
       // No valid data
         reg_position = -1;
-        //Serial.println(-1);
         i2c_regs[0] = STATUS_OUT_OF_RANGE;
-        Serial.println("error");
+        //Serial.println("error");
         
       }
       Sonar_waiting_echo = 0;
@@ -149,7 +144,6 @@ ISR(PCINT1_vect) {
 void Sonar_update()
 {
  
-
   if (Sonar_waiting_echo == 0)
   {
     // Send 2ms LOW pulse to ensure we get a nice clean pulse
@@ -170,7 +164,7 @@ void Sonar_update()
 
 
 void setup() {
-Serial.begin(38400);
+//Serial.begin(38400);
 
 Sonar_init();
 
