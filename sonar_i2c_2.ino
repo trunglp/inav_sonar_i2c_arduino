@@ -1,3 +1,10 @@
+/*
+Code modify by trunglp
+From Pawe Spychalski
+Pin A3 connect to Triger
+Pin A2 connect to Echo
+*/
+
 #include "WireMW.h"
 
 #define USE_HCSR04
@@ -66,17 +73,6 @@ void blink_sonar_update()
    Sonar_update();
   }
 
-//  if(_statusled_timer < now) {
-//    if(lastframe_time+5000 < now) {
-//      // no gps communication  
-//      _statusled_state = !_statusled_state;
-//      digitalWrite(13, _statusled_state ? HIGH : LOW);   // set the LED off
-//      _statusled_timer = now + 1000;
-//      return;
-//    }
-//        
-   
-    
     
   
 }
@@ -142,7 +138,7 @@ ISR(PCINT1_vect) {
         reg_position = -1;
         //Serial.println(-1);
         i2c_regs[0] = STATUS_OUT_OF_RANGE;
-        Serial.println("errir");
+        Serial.println("error");
         
       }
       Sonar_waiting_echo = 0;
